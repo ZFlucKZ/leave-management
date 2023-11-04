@@ -25,7 +25,7 @@ const NavItem = ({ className, children, ...props }: NavItemProps) => {
       className={twMerge(
         'px-2',
         isActive
-          ? 'text-primary-500 hover:text-primary-700 [&.active]:text-primary-900 font-bold dark:[&.active]:text-zinc-400'
+          ? 'font-bold text-primary-500 hover:text-primary-700 [&.active]:text-primary-900 dark:[&.active]:text-zinc-400'
           : 'text-neutral-500 hover:text-neutral-700 [&.active]:text-black/90 dark:[&.active]:text-zinc-400',
         className,
       )}

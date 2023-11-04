@@ -2,12 +2,15 @@ import { useRouter } from 'next/router';
 import Card from '~/features/ui/components/Card';
 import Loading from '~/features/ui/components/Loading';
 import { api } from '~/utils/api';
+import { type Announcement } from '../types';
 
-const AnnouncementDetails = () => {
-  const router = useRouter();
-  const { data: announcement, isLoading } = api.announcement.bySlug.useQuery(
-    router.query.slug as string,
-  );
+export interface AnnouncementDetailsProps {
+  slug: Announcement['slug'];
+}
+
+const AnnouncementDetails = ({ slug }: AnnouncementDetailsProps) => {
+  const { data: announcement, isLoading } =
+    api.announcement.bySlug.useQuery(slug);
 
   if (isLoading) return <Loading></Loading>;
 

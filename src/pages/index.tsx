@@ -52,6 +52,7 @@ const IndexPage = () => {
       title: `My Title: ${dateString}`,
       excerpt: `My Excerpt: ${dateString}`,
       content: `My Content: ${dateString}`,
+      image: '/uploads/eberhard-grossgasteiger-W7l2qAUKWcs-unsplash.jpg',
     });
   };
 

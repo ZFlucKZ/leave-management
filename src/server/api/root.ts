@@ -1,5 +1,8 @@
 import { articleRouter } from '~/server/api/routers/article';
 import { createTRPCRouter } from '~/server/api/trpc';
+import { leaveRouter } from './routers/leave';
+import { type inferRouterOutputs, type inferRouterInputs } from '@trpc/server';
+import { announcementRouter } from './routers/announement';
 
 /**
  * This is the primary router for your server.
@@ -8,7 +11,12 @@ import { createTRPCRouter } from '~/server/api/trpc';
  */
 export const appRouter = createTRPCRouter({
   article: articleRouter,
+  leave: leaveRouter,
+  announcement: announcementRouter,
 });
 
 // export type definition of API
 export type AppRouter = typeof appRouter;
+
+export type RouterInput = inferRouterInputs<AppRouter>;
+export type RouterOutput = inferRouterOutputs<AppRouter>;

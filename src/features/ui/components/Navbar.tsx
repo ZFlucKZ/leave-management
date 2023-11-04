@@ -15,7 +15,7 @@ const Navbar = ({ children }: NavbarProps) => {
   );
 };
 
-Navbar.Navbrand = NavBrand;
+Navbar.NavBrand = NavBrand;
 Navbar.NavItem = NavItem;
 
 export default Navbar;

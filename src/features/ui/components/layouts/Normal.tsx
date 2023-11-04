@@ -1,5 +1,4 @@
 import { type ReactNode } from 'react';
-import Link from 'next/link';
 import Navbar from '../Navbar';
 
 export interface LayoutProps {
@@ -10,7 +9,11 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <>
       <Navbar>
-        <Navbar.Navbrand></Navbar.Navbrand>
+        <Navbar.NavBrand></Navbar.NavBrand>
+        <Navbar.NavItem to="/admin">Admin</Navbar.NavItem>
+        <Navbar.NavItem to="/leaves">Leaves</Navbar.NavItem>
+        <Navbar.NavItem to="/announcements">Announcements</Navbar.NavItem>
+        <Navbar.NavItem to="/articles">Blog</Navbar.NavItem>
       </Navbar>
       <main>{children}</main>
     </>

@@ -3,7 +3,6 @@ import ArticleList from '~/features/articles/components/ArticleList';
 import Layout from '~/features/ui/components/layouts/Normal';
 import { generateServerSideHelper } from '~/server/shared/serverSideHelper';
 
-
 const IndexPage = () => {
   return <ArticleList></ArticleList>;
 };

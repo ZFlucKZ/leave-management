@@ -1,8 +1,10 @@
+import * as z from 'zod';
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from '~/server/api/trpc';
+import * as validator from '~/features/leaves/helpers/validators';
 
 // * Validate by zod
 // * number => z.number()
@@ -33,4 +35,26 @@ export const leaveRouter = createTRPCRouter({
 
     return leaves;
   }),
+
+  add: publicProcedure.input(validator.add).mutation(async ({ input, ctx }) => {
+    const article = await ctx.db.leave.create({
+      data: {
+        ...input,
+        userId: 1,
+      },
+    });
+
+    return article;
+  }),
+
+  update: publicProcedure
+    .input(validator.update)
+    .mutation(async ({ input, ctx }) => {
+      const article = await ctx.db.leave.update({
+        where: { id: input.id },
+        data: input.data,
+      });
+
+      return article;
+    }),
 });

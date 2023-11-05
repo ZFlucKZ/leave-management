@@ -2,7 +2,11 @@ import { type Config } from 'tailwindcss';
 import colors from 'tailwindcss/colors';
 
 export default {
-  content: ['./src/**/*.{ts,tsx}'],
+  darkMode: 'class',
+  content: [
+    './src/**/*.{ts,tsx}',
+    './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
+  ],
   theme: {
     extend: {
       colors: {

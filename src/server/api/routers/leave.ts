@@ -5,6 +5,8 @@ import {
   publicProcedure,
 } from '~/server/api/trpc';
 import * as validator from '~/features/leaves/helpers/validators';
+import { TRPCError } from '@trpc/server';
+import { setTimeout } from 'timers/promises';
 
 // * Validate by zod
 // * number => z.number()
@@ -14,6 +16,7 @@ import * as validator from '~/features/leaves/helpers/validators';
 //** backend
 export const leaveRouter = createTRPCRouter({
   list: publicProcedure.query(async ({ ctx }) => {
+    await setTimeout(5000);
     const leaves = await ctx.db.leave.findMany({
       select: {
         id: true,
@@ -34,6 +37,21 @@ export const leaveRouter = createTRPCRouter({
     });
 
     return leaves;
+  }),
+
+  byId: publicProcedure.input(z.number()).query(async ({ input, ctx }) => {
+    const leave = await ctx.db.leave.findUnique({
+      where: { id: input },
+      select: {
+        id: true,
+        leaveDate: true,
+        reason: true,
+      },
+    });
+
+    if (!leave) throw new TRPCError({ code: 'NOT_FOUND' });
+
+    return leave;
   }),
 
   add: publicProcedure.input(validator.add).mutation(async ({ input, ctx }) => {

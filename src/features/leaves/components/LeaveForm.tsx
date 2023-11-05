@@ -1,28 +1,49 @@
-import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+import { type SubmitHandler, useForm } from 'react-hook-form';
+import type * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Datepicker, { type DateValueType } from 'react-tailwindcss-datepicker';
+import {
+  type UpdateLeaveInput,
+  type AddLeaveInput,
+  type LeaveDetails,
+} from '../types';
+import * as validators from '../helpers/validators';
+import { capitalize } from 'lodash';
 
 // {
 //   leaveDate: string // datetime
 //   reason:string
 // }
 
-const schema = z.object({
-  leaveDate: z.string().datetime(),
-  reason: z.string().min(1),
-});
+export type LeaveFormProps =
+  | {
+      kind: 'create';
+      onSubmit: SubmitHandler<AddLeaveInput>;
+    }
+  | {
+      kind: 'edit';
+      leave: LeaveDetails;
+      onSubmit: SubmitHandler<UpdateLeaveInput['data']>;
+    };
 
-const LeaveForm = () => {
+const LeaveForm = (props: LeaveFormProps) => {
+  const { kind, onSubmit } = props;
   const {
     register,
     handleSubmit,
     setValue,
     getValues,
     formState: { errors, isValid },
-  } = useForm<z.infer<typeof schema>>({
+  } = useForm<
+    typeof onSubmit extends SubmitHandler<AddLeaveInput>
+      ? AddLeaveInput
+      : UpdateLeaveInput['data']
+  >({
     mode: 'onBlur',
-    resolver: zodResolver(schema),
+    resolver: zodResolver(
+      kind === 'create' ? validators.add : validators.updateForm,
+    ),
+    defaultValues: kind === 'edit' ? props.leave : undefined,
   });
 
   const handleValueChange = (value: DateValueType) => {
@@ -42,11 +63,8 @@ const LeaveForm = () => {
   };
 
   return (
-    <form
-      className="flex flex-col"
-      onSubmit={handleSubmit((value) => console.log(value))}
-    >
-      <h1>Create Leave</h1>
+    <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+      <h1>{capitalize(kind)}</h1>
       <label>Leave Date</label>
       <Datepicker
         value={currentLeaveRange}
@@ -58,7 +76,7 @@ const LeaveForm = () => {
       <textarea id="reason" rows={3} {...register('reason')}></textarea>
       {errors.reason && <div>{errors.reason.message}</div>}
       <button type="submit" disabled={!isValid}>
-        Create Leave
+        {capitalize(kind)}
       </button>
     </form>
   );

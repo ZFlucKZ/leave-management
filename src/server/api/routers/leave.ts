@@ -1,39 +1,8 @@
-import { TRPCError } from '@trpc/server';
-import { z } from 'zod';
-
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from '~/server/api/trpc';
-
-interface Leave {
-  id: number;
-  reason: string;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  leaveDate: string;
-}
-
-const leaves: Leave[] = [
-  {
-    id: 1,
-    reason: 'Reason#1',
-    status: 'PENDING',
-    leaveDate: new Date().toISOString(),
-  },
-  {
-    id: 2,
-    reason: 'Reason#2',
-    status: 'APPROVED',
-    leaveDate: new Date().toISOString(),
-  },
-  {
-    id: 3,
-    reason: 'Reason#3',
-    status: 'REJECTED',
-    leaveDate: new Date().toISOString(),
-  },
-];
 
 // * Validate by zod
 // * number => z.number()
@@ -42,7 +11,26 @@ const leaves: Leave[] = [
 //** frontend => api.article.[list, byId, update, delete, add]
 //** backend
 export const leaveRouter = createTRPCRouter({
-  list: publicProcedure.query(() => {
+  list: publicProcedure.query(async ({ ctx }) => {
+    const leaves = await ctx.db.leave.findMany({
+      select: {
+        id: true,
+        reason: true,
+        leaveDate: true,
+        status: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
     return leaves;
   }),
 });

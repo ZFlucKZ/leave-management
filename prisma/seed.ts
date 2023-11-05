@@ -1,6 +1,7 @@
 import { db } from '~/server/db';
 import { faker } from '@faker-js/faker';
 import { type LeaveStatus, type Prisma } from '@prisma/client';
+import { slugify } from '~/features/shared/helpers/slugify';
 
 async function main() {
   // Create Admin
@@ -73,6 +74,61 @@ async function main() {
       },
       update: {},
       create: createLeaveInput,
+    });
+  }
+
+  // Create Announcement
+  const numOfAnnouncements = 100;
+
+  for (let i = 0; i < numOfAnnouncements; i++) {
+    const title = faker.lorem.sentence();
+    const userId = faker.helpers.arrayElement(userIds);
+
+    const createAnnouncementInput: Prisma.AnnouncementCreateInput = {
+      title,
+      slug: slugify(title),
+      excerpt: faker.lorem.paragraph(),
+      content: faker.lorem.paragraphs({ min: 3, max: 10 }),
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+    };
+
+    await db.announcement.upsert({
+      where: {
+        slug: createAnnouncementInput.slug,
+      },
+      update: {},
+      create: createAnnouncementInput,
+    });
+  }
+
+  // Create Articles
+  const numOfArticles = 100;
+
+  for (let i = 0; i < numOfArticles; i++) {
+    const title = faker.lorem.sentence();
+    const userId = faker.helpers.arrayElement(userIds);
+
+    const createArticleInput: Prisma.ArticleCreateInput = {
+      title,
+      slug: slugify(title),
+      excerpt: faker.lorem.paragraph(),
+      content: faker.lorem.paragraphs({ min: 3, max: 10 }),
+      image: faker.image.url(),
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+    };
+
+    await db.article.upsert({
+      where: { slug: createArticleInput.slug },
+      update: {},
+      create: createArticleInput,
     });
   }
 }

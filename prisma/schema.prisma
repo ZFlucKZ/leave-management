@@ -27,15 +27,17 @@ enum Role {
 }
 
 model User {
-    id        Int      @id @default(autoincrement())
-    name      String
-    email     String   @unique
-    image     String?
-    password  String
-    role      Role     @default(MEMBER)
-    createdAt DateTime @default(now())
-    updatedAt DateTime @default(now())
-    leaves    Leave[]
+    id            Int            @id @default(autoincrement())
+    name          String
+    email         String         @unique
+    image         String?
+    password      String
+    role          Role           @default(MEMBER)
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @default(now())
+    leaves        Leave[]
+    articles      Article[]
+    announcements Announcement[]
 }
 
 model Leave {
@@ -50,4 +52,29 @@ model Leave {
     user            User        @relation(fields: [userId], references: [id])
 
     @@unique([userId, leaveDate])
+}
+
+model Announcement {
+    id        Int      @id @default(autoincrement())
+    title     String
+    slug      String   @unique
+    excerpt   String
+    content   String
+    userId    Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id])
+}
+
+model Article {
+    id        Int      @id @default(autoincrement())
+    title     String
+    slug      String   @unique
+    excerpt   String
+    content   String
+    image     String
+    userId    Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @default(now())
+    user      User     @relation(fields: [userId], references: [id])
 }

@@ -30,6 +30,12 @@ const config = {
         checksVoidReturn: { attributes: false },
       },
     ],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+      },
+    ],
   },
 };
 

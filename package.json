@@ -29,6 +29,7 @@
     "@trpc/react-query": "^10.37.1",
     "@trpc/server": "^10.37.1",
     "dayjs": "^1.11.10",
+    "immer": "^10.0.3",
     "lodash": "^4.17.21",
     "next": "^13.5.4",
     "next-auth": "^4.23.0",
@@ -38,7 +39,8 @@
     "react-tailwindcss-datepicker": "^1.6.6",
     "superjson": "^1.13.1",
     "tailwind-merge": "^2.0.0",
-    "zod": "^3.22.4"
+    "zod": "^3.22.4",
+    "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.2.0",

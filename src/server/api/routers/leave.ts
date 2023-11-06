@@ -16,7 +16,7 @@ import { setTimeout } from 'timers/promises';
 //** backend
 export const leaveRouter = createTRPCRouter({
   list: publicProcedure.query(async ({ ctx }) => {
-    await setTimeout(5000);
+    // await setTimeout(5000);
     const leaves = await ctx.db.leave.findMany({
       select: {
         id: true,

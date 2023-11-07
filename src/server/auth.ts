@@ -38,6 +38,16 @@ declare module 'next-auth/jwt' {
   }
 }
 
+function isUpdateSessionData(
+  session: unknown,
+): session is Record<'name' | 'email' | 'image', string | undefined> {
+  if (!session) return false;
+
+  if (typeof session !== 'object') return false;
+
+  return true;
+}
+
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
  *
@@ -49,6 +59,12 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     jwt({ token, user, session, trigger }) {
+      if (trigger === 'update' && isUpdateSessionData(session)) {
+        if(session.image) token.picture = session.image;
+        if(session.name) token.name = session.name;
+        if(session.email) token.email = session.email;
+      }
+
       if (user) {
         token.sub = user.id;
         token.email = user.email;

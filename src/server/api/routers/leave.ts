@@ -15,9 +15,12 @@ import { setTimeout } from 'timers/promises';
 //** frontend => api.article.[list, byId, update, delete, add]
 //** backend
 export const leaveRouter = createTRPCRouter({
-  list: publicProcedure.query(async ({ ctx }) => {
+  list: protectedProcedure.query(async ({ ctx }) => {
     // await setTimeout(5000);
     const leaves = await ctx.db.leave.findMany({
+      where: {
+        userId: +ctx.session?.user.id,
+      },
       select: {
         id: true,
         reason: true,
@@ -39,7 +42,7 @@ export const leaveRouter = createTRPCRouter({
     return leaves;
   }),
 
-  byId: publicProcedure.input(z.number()).query(async ({ input, ctx }) => {
+  byId: protectedProcedure.input(z.number()).query(async ({ input, ctx }) => {
     const leave = await ctx.db.leave.findUnique({
       where: { id: input },
       select: {
@@ -54,20 +57,33 @@ export const leaveRouter = createTRPCRouter({
     return leave;
   }),
 
-  add: publicProcedure.input(validator.add).mutation(async ({ input, ctx }) => {
-    const article = await ctx.db.leave.create({
-      data: {
-        ...input,
-        userId: 1,
-      },
-    });
+  add: protectedProcedure
+    .input(validator.add)
+    .mutation(async ({ input, ctx }) => {
+      const article = await ctx.db.leave.create({
+        data: {
+          ...input,
+          userId: +ctx.session?.user.id,
+        },
+      });
 
-    return article;
-  }),
+      return article;
+    }),
 
-  update: publicProcedure
+  update: protectedProcedure
     .input(validator.update)
     .mutation(async ({ input, ctx }) => {
+      const existingLeave = await ctx.db.leave.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      //* Attribute-Based Access Control
+      if (existingLeave?.userId === +ctx.session.user.id) {
+        throw new TRPCError({ code: 'FORBIDDEN' });
+      }
+
       const article = await ctx.db.leave.update({
         where: { id: input.id },
         data: input.data,

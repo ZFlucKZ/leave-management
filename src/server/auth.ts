@@ -22,6 +22,7 @@ declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: DefaultSession['user'] & {
       id: string;
+      role: Role;
       // ...other properties
       // role: UserRole;
     };
@@ -60,9 +61,9 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     jwt({ token, user, session, trigger }) {
       if (trigger === 'update' && isUpdateSessionData(session)) {
-        if(session.image) token.picture = session.image;
-        if(session.name) token.name = session.name;
-        if(session.email) token.email = session.email;
+        if (session.image) token.picture = session.image;
+        if (session.name) token.name = session.name;
+        if (session.email) token.email = session.email;
       }
 
       if (user) {

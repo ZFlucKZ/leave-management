@@ -7,3 +7,5 @@ export type LeaveDetails = RouterOutput['leave']['byId'];
 
 export type AddLeaveInput = z.infer<typeof add>;
 export type UpdateLeaveInput = z.infer<typeof update>;
+
+export type AdminLeaveItem = RouterOutput['admin']['leave']['list'][number];

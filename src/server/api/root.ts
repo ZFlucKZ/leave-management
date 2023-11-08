@@ -4,6 +4,7 @@ import { leaveRouter } from './routers/leave';
 import { type inferRouterOutputs, type inferRouterInputs } from '@trpc/server';
 import { announcementRouter } from './routers/announement';
 import { authRouter } from './routers/auth';
+import { adminLeaveRouter } from './routers/admin/leave';
 
 /**
  * This is the primary router for your server.
@@ -15,6 +16,9 @@ export const appRouter = createTRPCRouter({
   leave: leaveRouter,
   announcement: announcementRouter,
   auth: authRouter,
+  admin: createTRPCRouter({
+    leave: adminLeaveRouter,
+  }),
 });
 
 // export type definition of API

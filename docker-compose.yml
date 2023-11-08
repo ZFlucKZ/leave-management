@@ -1,5 +1,26 @@
 version: '3.9'
 services:
+  app:
+    platform: 'linux/amd64'
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+      args:
+        NEXT_PUBLIC_CLIENTVAR: 'clientvar'
+        DATABASE_URL: 'postgres://myapp:mypassword@localhost:9111/leave-management?schema-public'
+        NEXTAUTH_SECRET: 'pas912PSdl1093qijISCK192394/a@ksjd92lka-sad092lSD'
+        NEXTAUTH_URL: 'http://localhost:3000'
+    working_dir: /app
+    ports:
+      - '3000-3000'
+    image: leave-management
+    environment:
+      DATABASE_URL: 'postgres://myapp:mypassword@localhost:9111/leave-management?schema-public'
+      NEXTAUTH_SECRET: 'pas912PSdl1093qijISCK192394/a@ksjd92lka-sad092lSD'
+      NEXTAUTH_URL: 'http://localhost:3000'
+    depends_on:
+      - db
   db:
     image: 'postgres:15.3-alpine3.18'
     ports:
@@ -7,3 +28,4 @@ services:
     environment:
       POSTGRES_USER: myapp
       POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: leave-management
